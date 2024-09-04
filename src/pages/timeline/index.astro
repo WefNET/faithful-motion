@@ -1,0 +1,36 @@
+---
+import { getCollection } from "astro:content";
+
+const events = await getCollection("timeline-events");
+
+events.sort((a, b) => {
+    return Number(new Date(a.data.date)) - Number(new Date(b.data.date));
+});
+
+import Layout from '../../layouts/Layout.astro';
+---
+
+<Layout title="Edward Vandenburgh Timeline">
+    <main>
+        <h1>Edward Vandenburgh Timeline</h1>
+
+        <ul>
+            {
+                events.map(async (post: any) => {
+                    const { Content } = await post.render();
+
+                    return (
+                        <li>
+                            <a href={`/posts/${post.slug}`}>
+                                {post.data.title}
+                            </a>
+                            <Content />
+                        </li>
+                    );
+                })
+            }
+        </ul>
+    </main>
+
+    <!-- {items.map(({ Content }) => <Content />)} --></Layout
+>
